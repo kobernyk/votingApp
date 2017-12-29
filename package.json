@@ -26,8 +26,8 @@
     "nodemon": "^1.14.3"
   },
   "scripts": {
-    "start": "nodemon app.js --exec babel-node",
-    "build": "babel . -d dist",
+    "start": "nodemon lib/app.js --exec babel-node",
+    "build": "babel lib -d dist",
     "serve": "node dist/app.js"
   }
 }
