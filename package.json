@@ -1,7 +1,7 @@
 {
-  "name": "loginApp",
+  "name": "votingApp",
   "version": "1.0.0",
-  "description": "authentication system",
+  "description": "voting system",
   "main": "src/app.js",
   "license": "MIT",
   "dependencies": {
