@@ -2,7 +2,7 @@
   "name": "loginApp",
   "version": "1.0.0",
   "description": "authentication system",
-  "main": "lin/app.js",
+  "main": "lib/app.js",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
