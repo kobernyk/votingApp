@@ -2,7 +2,7 @@
   "name": "loginApp",
   "version": "1.0.0",
   "description": "authentication system",
-  "main": "lib/app.js",
+  "main": "src/app.js",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -26,8 +26,8 @@
     "nodemon": "^1.14.3"
   },
   "scripts": {
-    "start": "nodemon lib/app.js --exec babel-node",
-    "build": "babel lib -d dist",
+    "start": "nodemon src/app.js --exec babel-node",
+    "build": "babel src -d dist",
     "serve": "node dist/app.js"
   }
 }
