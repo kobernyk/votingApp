@@ -14,14 +14,14 @@ const { matchedData, sanitize } = require('express-validator/filter');
 // DB
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
-const DB_URI = process.env.MLAB_URI || 'mongodb://localhost/loginapp';
+const DB_URI = process.env.MLAB_URI || 'mongodb://localhost/votingapp';
 mongoose.connect(DB_URI);
 var db = mongoose.connection;
 
 // routes
 let routes = require('./routes/index');
 let users = require('./routes/users');
-
+let polls = require('./routes/polls');
 
 // init app
 const app = express();
@@ -66,6 +66,7 @@ app.use(function(req, res, next) {
 // middleware for our route files
 app.use('/', routes);
 app.use('/users', users);
+app.use('/polls', polls);
 
 // set port
 app.set('port', (process.env.PORT || 3000));

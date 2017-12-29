@@ -1,0 +1,26 @@
+<h2 class="border border-top-0 border-left-0 border-right-0 border-muted page-header">New Poll</h2>
+
+{{#if errors}}
+	{{#each errors}}
+		<div class="alert alert-danger">{{msg}}</div>
+	{{/each}}
+{{/if}}
+
+<form method="post" action="/polls/new">
+	<div id="options">
+		<div class="form-group">
+			<label>Title / Question</label>
+			<input type="text" class="form-control" placeholder="i.e, Who is stronger?" name="title">
+		</div>
+		<div class="form-group">
+			<label>Option 1</label>
+			<input type="text" class="form-control" placeholder="Saitama" name="option1">
+		</div>
+		<div class="form-group">
+			<label>Option 2</label>
+			<input type="text" class="form-control" placeholder="Son Goku" name="option2">
+		</div>
+	</div>
+	<button type="button" class="btn btn-outline-secondary" id="btnAddOption">Add Option</button>
+	<button type="submit" class="btn btn-primary">Submit</button>
+</form>
