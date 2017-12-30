@@ -98,13 +98,15 @@ router.get('/poll/:POLL', (req, res) => {
 			res.render('view-poll', {
 				'title': poll.title,
 				'options': poll.options,
-				'path': poll.path
+				'path': poll.path,
+				'script-chart': '/js/chartScript.js'
 			});			
 		});
 });
 
 // poll answer submission
 router.post('/poll/:POLL', (req, res) => {
+	console.log(req.body);
 	Poll.getPollByPath(prefPath + req.params.POLL,
 		(err, poll) => {
 			if (err) throw err;

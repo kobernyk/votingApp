@@ -4,6 +4,8 @@
 	<title>Voting App</title>
 	<link rel="stylesheet" href="/css/bootstrap.css">
 	<link rel="stylesheet" href="/css/style.css">
+	<!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -63,6 +65,10 @@
 	          	{{/if}}
 
 	          	{{{body}}}
+
+	          	{{#if script-chart}}
+	          	<div id="chart_div"></div>
+	          	{{/if}}
 	          </div>
 	        </div>
 	      </main>
@@ -73,13 +79,21 @@
 
 	</div> <!-- /container -->
 	<script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
 	<script src="/js/jquery.js"></script>
 	<script src="/js/popper-utils.js"></script>
 	<script src="/js/popper.js"></script>
 	<script src="/js/tooltip.js"></script>
 	<script src="/js/bootstrap.js"></script>
+
 	{{#if script}}
 	<script src={{script}}></script>
 	{{/if}}
+
+    {{#if script-chart}}
+    <script type="text/javascript" src={{script-chart}}></script>
+    {{/if}}
 </body>
 </html>

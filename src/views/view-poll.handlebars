@@ -1,10 +1,10 @@
 <h3 class="border border-top-0 border-left-0 border-right-0 border-muted page-header">{{title}}</h3>
 <form method="post" action={{path}}>
 	<div class="card my-2" style="width: 18rem;">
-	  <ul class="list-group list-group-flush">
+	  <ul class="list-group list-group-flush" id="poll-options">
 	  	{{#each options}}
 	    <li class="list-group-item input-group py-1 px-2">
-	    	<input type="radio" name="poll" value={{0}} checked>
+	    	<input type="radio" name="poll" value='{{0}}' checked>
 			<label class="mt-2">{{0}}</label>
 			<small class="text-muted">{{1}}</small>
 	    </li>
