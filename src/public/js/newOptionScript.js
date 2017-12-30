@@ -5,6 +5,6 @@ $(document).ready(() => {
 		$('#options').append('<div class="form-group">'+
 			'<label>Option '+optionsCount+'</label><input type="text" '+
 			'class="form-control" '+
-			'name;="option'+optionsCount+'"></div>')
+			'name="option'+optionsCount+'"></div>');
 	});
 });

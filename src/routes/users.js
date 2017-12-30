@@ -28,7 +28,9 @@ router.post('/register', [
 		check('email', 'Email is required')
 			.isLength({min: 1})
 			.isEmail().withMessage('Email not valid'),
-		check('username', 'Username is required').isLength({min: 1}),
+		check('username', 'Username is required')
+			.isLength({min: 1})
+			.isAlphanumeric().withMessage("Invalid Username"),
 		check('password', 'Password is required').isLength({min: 1}),
 		check('password2', 'Password do not match')
 			.exists()
@@ -61,6 +63,8 @@ router.post('/register', [
 					if (err.code === 11000) {
 						req.flash("error_msg", "Username or Email already in use.");
 						res.redirect('/users/register');
+					} else {
+						throw err;
 					}
 				}
 				else {

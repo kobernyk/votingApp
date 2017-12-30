@@ -1,1 +1,8 @@
-MY POLLS
+<h2 class="border border-top-0 border-left-0 border-right-0 border-muted page-header">My Polls</h2>
+<ul id="my-polls-list">
+	{{#each polls}}
+	<li>
+		<a href={{path}} >{{title}}</a>
+	</li>
+	{{/each}}
+</ul>

@@ -1,2 +1,8 @@
-<h2 class="border border-top-0 border-left-0 border-right-0 border-muted page-header">Dashboard</h2>
-<p>Welcome to your dashboard</p>
+<h2 class="border border-top-0 border-left-0 border-right-0 border-muted page-header">Polls:</h2>
+<ul id="all-polls-list">
+	{{#each polls}}
+	<li>
+		<a href={{path}} >{{title}}</a>
+	</li>
+	{{/each}}
+</ul>

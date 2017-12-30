@@ -1,13 +1,26 @@
 import express from 'express';
 var router = express.Router();
 
+const ensure = require('../modules/ensure.js').ensureAuthenticated;
+
+const Poll = require('../models/polls');
+
+const prefPath = '/polls/poll/';
 
 const { check, validationResult } = require('express-validator/check');
 const { matchedData, sanitize } = require('express-validator/filter');
 
+// custom middleware to check if User is Logged in
+router.use(ensure);
+
 // all polls
 router.get('/', (req, res) => {
-	res.render('polls');
+	Poll.getAllPolls((err, polls) => {
+		if (err) throw err;
+		res.render('index', {
+			'polls': polls
+		})
+	});
 });
 
 // new poll
@@ -19,7 +32,14 @@ router.get('/new/', (req, res) => {
 
 // user's polls
 router.get('/user/', (req, res) => {
-	res.render('my-polls');
+	Poll.getPollsByUsername(
+			req.app.get('user').username,
+			(err, polls) => {
+				if (err) throw err;
+				res.render('my-polls', {
+					'polls': polls
+				});
+			});
 });
 
 // submit new poll
@@ -50,10 +70,59 @@ router.post('/new/', [
 				req.flash("error_msg", "Options should be different.");
 				res.redirect('/polls/new');
 			} else {
-				console.log('New Poll created');
-				res.redirect('/');
+				let newPoll = Poll({
+					'title': req.body.title,
+					'options': aux.map((x) => [x, 0]),
+					'username': req.app.get('user').username,
+					'path': '0'
+				});
+				Poll.createPoll(newPoll, (err, poll) => {
+					if (err) {
+						throw err;	
+					} else {
+						console.log('New poll: ' + poll.title);
+						req.flash('success_msg', 'New poll created');
+						res.redirect('/polls/user');
+					}
+				});
 			}
 		}
 	});
+
+// View poll
+router.get('/poll/:POLL', (req, res) => {
+	Poll.getPollByPath(prefPath + req.params.POLL,
+		(err, poll) => {
+			if (err) throw err;
+			res.render('view-poll', {
+				'title': poll.title,
+				'options': poll.options,
+				'path': poll.path
+			});			
+		});
+});
+
+// poll submission
+router.post('/poll/:POLL', (req, res) => {
+	Poll.getPollByPath(prefPath + req.params.POLL,
+		(err, poll) => {
+			if (err) throw err;
+			Poll.findByIdAndUpdate(poll._id,
+				{ $set: {
+					options: poll.options.map((arr) => {
+						if (arr[0] == req.body.poll) {
+							arr[1]++;
+						}
+						return arr;
+					})
+				} },
+				{ new: true },
+				(err, poll) => {
+					if (err) throw err;
+					req.flash('success_msg', 'Submission Succeded');
+					res.redirect(poll.path);
+				});
+		});
+});
 
 module.exports = router;

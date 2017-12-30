@@ -4,7 +4,7 @@ var router = express.Router();
 
 // set homepage
 router.get('/', ensure.ensureAuthenticated,function(req, res) {
-	res.render('index');
+	res.redirect('/polls/');
 });
 
 module.exports = router;
