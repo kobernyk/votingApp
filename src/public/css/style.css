@@ -88,3 +88,7 @@ body {
 footer {
   margin-top: 40px;
 }
+
+.delete-btn {
+  display: inline;
+}

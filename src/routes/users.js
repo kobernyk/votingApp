@@ -30,7 +30,7 @@ router.post('/register', [
 			.isEmail().withMessage('Email not valid'),
 		check('username', 'Username is required')
 			.isLength({min: 1})
-			.isAlphanumeric().withMessage("Invalid Username"),
+			.isAlphanumeric().withMessage("Username should have only alphanumerical characters"),
 		check('password', 'Password is required').isLength({min: 1}),
 		check('password2', 'Password do not match')
 			.exists()

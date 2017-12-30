@@ -46,3 +46,7 @@ module.exports.getAllPolls = function(callback) {
 module.exports.getPollByPath = function(path, callback) {
 	Poll.findOne({"path": path}, callback);
 }
+
+module.exports.getPollById = function(id, callback) {
+	Poll.findOne({"_id": id}, callback);
+}

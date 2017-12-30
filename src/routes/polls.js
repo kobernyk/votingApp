@@ -37,7 +37,8 @@ router.get('/user/', (req, res) => {
 			(err, polls) => {
 				if (err) throw err;
 				res.render('my-polls', {
-					'polls': polls
+					'polls': polls,
+					'script': '/js/deletePollScript.js'
 				});
 			});
 });
@@ -102,7 +103,7 @@ router.get('/poll/:POLL', (req, res) => {
 		});
 });
 
-// poll submission
+// poll answer submission
 router.post('/poll/:POLL', (req, res) => {
 	Poll.getPollByPath(prefPath + req.params.POLL,
 		(err, poll) => {
@@ -123,6 +124,21 @@ router.post('/poll/:POLL', (req, res) => {
 					res.redirect(poll.path);
 				});
 		});
+});
+
+// delete poll
+router.get('/delete/:ID', (req, res) => {
+	Poll.getPollById(req.params.ID,
+		(err, poll) => {
+			if (err) throw err;
+			poll.remove((err) => {
+				if (err) res.json({err: err});
+				else {
+					req.flash('warning_msg', 'Poll deleted')
+					res.json({success: true});
+				}
+			});
+		})
 });
 
 module.exports = router;

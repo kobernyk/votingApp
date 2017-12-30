@@ -50,6 +50,10 @@
 					<div class="alert alert-success" role="alert">{{success_msg}}</div>
 	          	{{/if}}
 
+	          	{{#if warning_msg}}
+	          		<div class="alert alert-warning" role="alert">{{warning_msg}}</div>
+	          	{{/if}}
+
 				{{#if error_msg}}
 					<div class="alert alert-danger" role="alert">{{error_msg}}</div>
 	          	{{/if}}
@@ -68,6 +72,7 @@
 	      </footer>
 
 	</div> <!-- /container -->
+	<script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
 	<script src="/js/jquery.js"></script>
 	<script src="/js/popper-utils.js"></script>
 	<script src="/js/popper.js"></script>

@@ -3,6 +3,7 @@
 	{{#each polls}}
 	<li>
 		<a href={{path}} >{{title}}</a>
+		<button type="button" class="btn btn-danger btn-sm mx-1 delete-btn" data-id="{{_id}}"><i class="far fa-trash-alt"></i></button>
 	</li>
 	{{/each}}
 </ul>
