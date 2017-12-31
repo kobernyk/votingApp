@@ -167,26 +167,15 @@ router.post('/poll/:POLL', (req, res) => {
 					{ new: true },
 					(err, poll) => {
 						if (err) throw err;
-						if (!newOption) {
-							Poll.findByIdAndUpdate(poll._id,
+						let aux = poll.options;
+						if (newOption) {
+							aux.push([req.body.poll, 1]);
+						}
+						Poll.findByIdAndUpdate(poll._id,
 							{
 								$set: {
+									options: aux,
 									users: usersUpdated
-								}
-							},
-							{ new: true },
-							(err, poll) => {
-								if(err) throw err;
-								req.flash('success_msg', 'Submission Succeded');
-								res.redirect(poll.path);
-							});
-						} else {
-							let aux = poll.options;
-							aux.push([req.body.poll, 0]);
-							Poll.findByIdAndUpdate(poll._id,
-							{
-								$set: {
-									options: aux
 								}
 							},
 							{ new: true },
@@ -194,8 +183,8 @@ router.post('/poll/:POLL', (req, res) => {
 								if (err) throw err;
 								req.flash('success_msg', 'Submission Succeded');
 								res.redirect(poll.path);
-							});
-						}
+							}
+						);
 					}
 				);
 			} else {

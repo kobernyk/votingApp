@@ -2,7 +2,7 @@ $(document).ready(function() {
 	$('#btnAddOption').click(function() {
 		$('#new-option').removeClass('d-none');
 		$('#btnAddOption').html('Cancel');
-		$('#submit-button').html('Add');
+		$('#submit-button').html('Vote for new option');
 
 		$('#btnAddOption').click(function() {
 			$('#new-option').addClass('d-none');
