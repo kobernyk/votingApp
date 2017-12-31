@@ -26,7 +26,9 @@ router.get('/', (req, res) => {
 // new poll
 router.get('/new/', (req, res) => {
 	res.render('new', {
-		script: '/js/newOptionScript.js'
+		script: {
+			script1: {script: '/js/newOptionScript.js'}	
+		}
 	});
 });
 
@@ -38,7 +40,9 @@ router.get('/user/', (req, res) => {
 				if (err) throw err;
 				res.render('my-polls', {
 					'polls': polls,
-					'script': '/js/deletePollScript.js'
+					'script': {
+						script1: {script: '/js/deletePollScript.js'}
+					}
 				});
 			});
 });
@@ -106,7 +110,10 @@ router.get('/poll/:POLL', (req, res) => {
 				'title': poll.title,
 				'options': poll.options,
 				'path': poll.path,
-				'script-chart': '/js/chartScript.js'
+				'script': {
+					script1: {script: '/js/chartScript.js'},
+					script2: {script: '/js/submitNewOption.js'}
+				}
 			});			
 		});
 });
@@ -114,6 +121,7 @@ router.get('/poll/:POLL', (req, res) => {
 // poll answer submission
 router.post('/poll/:POLL', (req, res) => {
 	console.log(req.body);
+	let newOption = true;
 	Poll.getPollByPath(prefPath + req.params.POLL,
 		(err, poll) => {
 			if (err) throw err;
@@ -122,6 +130,7 @@ router.post('/poll/:POLL', (req, res) => {
 					options: poll.options.map((arr) => {
 						if (arr[0] == req.body.poll) {
 							arr[1]++;
+							newOption = false;
 						}
 						return arr;
 					})
@@ -129,8 +138,25 @@ router.post('/poll/:POLL', (req, res) => {
 				{ new: true },
 				(err, poll) => {
 					if (err) throw err;
-					req.flash('success_msg', 'Submission Succeded');
-					res.redirect(poll.path);
+					if (!newOption) {
+						req.flash('success_msg', 'Submission Succeded');
+						res.redirect(poll.path);
+					} else {
+						let aux = poll.options;
+						aux.push([req.body.poll, 0]);
+						Poll.findByIdAndUpdate(poll._id,
+						{
+							$set: {
+								options: aux
+							}
+						},
+						{ new: true },
+						(err, poll) => {
+							if (err) throw err;
+							req.flash('success_msg', 'Submission Succeded');
+							res.redirect(poll.path);
+						});
+					}
 				});
 		});
 });

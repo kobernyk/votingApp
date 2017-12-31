@@ -70,9 +70,7 @@
 
 	          	{{{body}}}
 
-	          	{{#if script-chart}}
 	          	<div id="chart_div"></div>
-	          	{{/if}}
 	          </div>
 	        </div>
 	      </main>
@@ -93,11 +91,14 @@
 	<script src="/js/bootstrap.js"></script>
 
 	{{#if script}}
-	<script src={{script}}></script>
+	{{#each script}}
+	<script type="text/javascript" src="{{script}}"></script>
+	{{/each}}
 	{{/if}}
 
+	<!--
     {{#if script-chart}}
     <script type="text/javascript" src={{script-chart}}></script>
-    {{/if}}
+    {{/if}} -->
 </body>
 </html>

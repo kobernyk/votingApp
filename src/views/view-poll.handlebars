@@ -9,8 +9,11 @@
 			<small class="text-muted">{{1}}</small>
 	    </li>
 	    {{/each}}
+	    <div class="form-control d-none" id="new-option">
+			<input type="text" class="form-control" placeholder="New Option">
+		</div>
 	  </ul>
 	</div>
-	<button class="btn btn-outline-secondary" type="button">Add Option</button>
-	<button class="btn btn-primary" type="submit">Submit</button>
+	<button id="btnAddOption" class="btn btn-outline-secondary" type="button">Add Option</button>
+	<button id="submit-button" class="btn btn-primary" type="submit">Submit</button>
 </form>
