@@ -46,7 +46,14 @@ router.get('/user/', (req, res) => {
 // submit new poll
 router.post('/new/', [
 		// validation
-		check('title', 'Please, write a Title').isLength({min: 1}),
+		check('title').custom((value, {req, location, path}) => {
+			for(let key in req.body) {
+				if (!req.body[key]) {
+					return false;
+				}
+			}
+			return true;
+		}).withMessage('No empty fields are allowed')
 	], (req, res) => {
 		// handle errors
 		const errors = validationResult(req);
