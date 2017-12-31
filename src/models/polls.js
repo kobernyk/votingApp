@@ -9,7 +9,8 @@ var PollSchema = mongoose.Schema({
 	username: {
 		type: String
 	},
-	path: String
+	path: String,
+	users: Array
 });
 
 var Poll = module.exports = mongoose.model('polls', PollSchema);

@@ -1,7 +1,7 @@
 import express from 'express';
 var router = express.Router();
 
-const ensure = require('../modules/ensure.js').ensureAuthenticated;
+const ensure = require('../modules/ensure.js');
 
 const Poll = require('../models/polls');
 
@@ -11,7 +11,8 @@ const { check, validationResult } = require('express-validator/check');
 const { matchedData, sanitize } = require('express-validator/filter');
 
 // custom middleware to check if User is Logged in
-router.use(ensure);
+router.all('/new/', ensure.ensureAuthenticated);
+router.all('/delete/*', ensure.ensureAuthenticated);
 
 // all polls
 router.get('/', (req, res) => {
@@ -86,7 +87,8 @@ router.post('/new/', [
 					'title': req.body.title,
 					'options': aux.map((x) => [x, 0]),
 					'username': req.app.get('user').username,
-					'path': '0'
+					'path': '0',
+					'users': []
 				});
 				Poll.createPoll(newPoll, (err, poll) => {
 					if (err) {
@@ -105,16 +107,23 @@ router.post('/new/', [
 router.get('/poll/:POLL', (req, res) => {
 	Poll.getPollByPath(prefPath + req.params.POLL,
 		(err, poll) => {
-			if (err) throw err;
-			res.render('view-poll', {
-				'title': poll.title,
-				'options': poll.options,
-				'path': poll.path,
-				'script': {
-					script1: {script: '/js/chartScript.js'},
-					script2: {script: '/js/submitNewOption.js'}
-				}
-			});			
+			if (err) {
+				throw err;
+			}
+			if(poll) {
+				res.render('view-poll', {
+					'title': poll.title,
+					'options': poll.options,
+					'path': poll.path,
+					'script': {
+						script1: {script: '/js/chartScript.js'},
+						script2: {script: '/js/submitNewOption.js'}
+					}
+				});
+			} else {
+				req.flash('error_msg', 'No such poll.');
+				res.redirect('/polls');
+			}		
 		});
 });
 
@@ -125,39 +134,75 @@ router.post('/poll/:POLL', (req, res) => {
 	Poll.getPollByPath(prefPath + req.params.POLL,
 		(err, poll) => {
 			if (err) throw err;
-			Poll.findByIdAndUpdate(poll._id,
-				{ $set: {
-					options: poll.options.map((arr) => {
-						if (arr[0] == req.body.poll) {
-							arr[1]++;
-							newOption = false;
+
+			// get ip
+			let ipAd = null;
+			if (req.headers['x-forwarded-for']) {
+				ipAd = req.headers['x-forwarded-for'].split(',')[0];
+			}
+			else {
+				ipAd = req.ip;
+			}
+			if((req.app.get('user') && 
+				poll.users.indexOf(req.app.get('user').username) == -1) ||
+				(!req.app.get('user') &&
+					poll.users.indexOf(ipAd) == -1)) {
+				let usersUpdated = poll.users;
+				let newUser;
+				if (req.app.get('user')) newUser = req.app.get('user').username;
+				else newUser = ipAd;
+				usersUpdated.push(newUser);
+				Poll.findByIdAndUpdate(poll._id,
+					{ 
+						$set: {
+							options: poll.options.map((arr) => {
+								if (arr[0] == req.body.poll) {
+									arr[1]++;
+									newOption = false;
+								}
+								return arr;
+							})
 						}
-						return arr;
-					})
-				} },
-				{ new: true },
-				(err, poll) => {
-					if (err) throw err;
-					if (!newOption) {
-						req.flash('success_msg', 'Submission Succeded');
-						res.redirect(poll.path);
-					} else {
-						let aux = poll.options;
-						aux.push([req.body.poll, 0]);
-						Poll.findByIdAndUpdate(poll._id,
-						{
-							$set: {
-								options: aux
-							}
-						},
-						{ new: true },
-						(err, poll) => {
-							if (err) throw err;
-							req.flash('success_msg', 'Submission Succeded');
-							res.redirect(poll.path);
-						});
+					},
+					{ new: true },
+					(err, poll) => {
+						if (err) throw err;
+						if (!newOption) {
+							Poll.findByIdAndUpdate(poll._id,
+							{
+								$set: {
+									users: usersUpdated
+								}
+							},
+							{ new: true },
+							(err, poll) => {
+								if(err) throw err;
+								req.flash('success_msg', 'Submission Succeded');
+								res.redirect(poll.path);
+							});
+						} else {
+							let aux = poll.options;
+							aux.push([req.body.poll, 0]);
+							Poll.findByIdAndUpdate(poll._id,
+							{
+								$set: {
+									options: aux
+								}
+							},
+							{ new: true },
+							(err, poll) => {
+								if (err) throw err;
+								req.flash('success_msg', 'Submission Succeded');
+								res.redirect(poll.path);
+							});
+						}
 					}
-				});
+				);
+			} else {
+				req.flash('error_msg', 'You can only vote once');
+				res.redirect(poll.path);
+			}
+			
 		});
 });
 

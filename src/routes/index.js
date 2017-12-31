@@ -3,7 +3,7 @@ const ensure = require('../modules/ensure');
 var router = express.Router();
 
 // set homepage
-router.get('/', ensure.ensureAuthenticated,function(req, res) {
+router.get('/', function(req, res) {
 	res.redirect('/polls/');
 });
 

@@ -2,9 +2,12 @@ $(document).ready(function() {
 	$('#btnAddOption').click(function() {
 		$('#new-option').removeClass('d-none');
 		$('#btnAddOption').html('Cancel');
+		$('#submit-button').html('Add');
+
 		$('#btnAddOption').click(function() {
 			$('#new-option').addClass('d-none');
 			$('#btnAddOption').html('Add Option');
+			$('#submit-button').html('Submit');
 		});
 	})
 	$('#submit-button').click(function() {
