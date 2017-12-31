@@ -13,6 +13,7 @@ const { matchedData, sanitize } = require('express-validator/filter');
 // custom middleware to check if User is Logged in
 router.all('/new/', ensure.ensureAuthenticated);
 router.all('/delete/*', ensure.ensureAuthenticated);
+router.all('/user/', ensure.ensureAuthenticated);
 
 // all polls
 router.get('/', (req, res) => {
@@ -64,7 +65,10 @@ router.post('/new/', [
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			res.render('new', {
-				"errors": errors.array()
+				"errors": errors.array(),
+				'script': {
+					script1: {script: '/js/newOptionScript.js'}
+				}
 			});
 		} else {
 			// check if all options are differents
@@ -123,7 +127,7 @@ router.get('/poll/:POLL', (req, res) => {
 			} else {
 				req.flash('error_msg', 'No such poll.');
 				res.redirect('/polls');
-			}		
+			}
 		});
 });
 
