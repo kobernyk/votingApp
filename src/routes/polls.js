@@ -150,7 +150,8 @@ router.post('/poll/:POLL', (req, res) => {
 			if((req.app.get('user') && 
 				poll.users.indexOf(req.app.get('user').username) == -1) ||
 				(!req.app.get('user') &&
-					poll.users.indexOf(ipAd) == -1)) {
+					poll.users.indexOf(ipAd) == -1) &&
+				req.body.poll) {
 				let usersUpdated = poll.users;
 				let newUser;
 				if (req.app.get('user')) newUser = req.app.get('user').username;
@@ -191,6 +192,9 @@ router.post('/poll/:POLL', (req, res) => {
 						);
 					}
 				);
+			} else if (!req.body.poll) {
+				req.flash('error_msg', 'No empty fields are allowed');
+				res.redirect(poll.path);
 			} else {
 				req.flash('error_msg', 'You can only vote once');
 				res.redirect(poll.path);
